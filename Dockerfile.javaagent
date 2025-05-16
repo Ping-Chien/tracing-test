@@ -1,0 +1,15 @@
+FROM alpine:3.21.3
+
+# Set environment variables
+ENV JAVA_AGENT_VERSION=2.16.0 \
+    JAVA_AGENT_JAR=opentelemetry-javaagent.jar
+
+# Download the OpenTelemetry Java Agent
+RUN apk add --no-cache wget \
+    && wget -O /tmp/${JAVA_AGENT_JAR} https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/v${JAVA_AGENT_VERSION}/opentelemetry-javaagent.jar \
+    && apk del wget
+
+# Set the default command to just keep the container alive (or override as needed)
+CMD ["sleep", "infinity"]
+
+# The agent jar is available at /opentelemetry-javaagent.jar

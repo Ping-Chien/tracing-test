@@ -1,7 +1,9 @@
 #!/bin/bash
 
-# 參數：可自訂 tag，預設為 tracing-test:latest
-TAG=${1:-tracing-test:latest}
+# 參數：可自訂 app image tag，預設為 tracing-test:latest
+APP_TAG=${1:-tracing-test:latest}
+# 參數：可自訂 javaagent image tag，預設為 javaagent:2.16.0
+JAVAAGENT_TAG=${2:-javaagent:2.16.0}
 
 # 編譯 Spring Boot 專案
 ./gradlew clean build -x test
@@ -12,13 +14,24 @@ if [ ! -f build/libs/tracing-test-0.0.1-SNAPSHOT.jar ]; then
   exit 1
 fi
 
-# 建立 Docker image
+# 建立 Spring Boot app Docker image
 
-docker build -t $TAG .
+docker build -t $APP_TAG .
 
 if [ $? -eq 0 ]; then
-  echo "Docker image 已建立，tag: $TAG"
+  echo "Spring Boot app Docker image 已建立，tag: $APP_TAG"
 else
-  echo "Docker build 失敗"
+  echo "Spring Boot app Docker build 失敗"
+  exit 1
+fi
+
+# 建立 javaagent image
+
+docker build -f Dockerfile.javaagent -t $JAVAAGENT_TAG .
+
+if [ $? -eq 0 ]; then
+  echo "Javaagent image 已建立，tag: $JAVAAGENT_TAG"
+else
+  echo "Javaagent image 建立失敗"
   exit 1
 fi
