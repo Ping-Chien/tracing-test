@@ -20,11 +20,8 @@ public class CounterController {
 
     @GetMapping("/click")
     public String click() {
-        long maxId = counterRepository.findMaxId();
-        long newId = maxId + 1;
         Counter counter = new Counter();
-        counter.setId(newId);
-        counter.setNumber(newId);
+        counter.setNumber(counterRepository.count() + 1); // 或依需求設定number
         counterRepository.save(counter);
         return "Clicked!";
     }
