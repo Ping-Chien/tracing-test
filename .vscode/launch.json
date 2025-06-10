@@ -1,0 +1,23 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Launch TracingTestApplication (Local Profile)",
+            "request": "launch",
+            "mainClass": "com.example.tracingtest.TracingTestApplication",
+            "projectName": "tracing-test",
+            "env": {
+                "SPRING_PROFILES_ACTIVE": "local"
+            },
+            "args": ""
+        },
+        {
+            "type": "java",
+            "name": "Launch TracingTestApplication (Default Profile)",
+            "request": "launch",
+            "mainClass": "com.example.tracingtest.TracingTestApplication",
+            "projectName": "tracing-test"
+        }
+    ]
+}
