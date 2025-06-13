@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # 參數：可自訂 app image tag，預設為 tracing-test:ori
-APP_TAG=${1:-tracing-test:ori}
+APP_TAG=${1:-tracing-test:push-mode}
 # 參數：可自訂 javaagent image tag，預設為 javaagent:2.16.0
 JAVAAGENT_TAG=${2:-javaagent:2.16.0}
 
