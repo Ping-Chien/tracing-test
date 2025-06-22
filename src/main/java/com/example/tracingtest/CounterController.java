@@ -1,11 +1,10 @@
 package com.example.tracingtest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
-
 
 @RestController
 public class CounterController {
@@ -14,9 +13,6 @@ public class CounterController {
 
     @Autowired
     private RestTemplate restTemplate;
-
-    @Value("${other.pod.url}")
-    private String otherPodUrl;
 
     @GetMapping("/click")
     public String click() {
@@ -30,8 +26,8 @@ public class CounterController {
     }
 
     @GetMapping("/call-other")
-    public String callOtherPodClick() {
-        String url = otherPodUrl + "/click";
+    public String callOtherPodClick(@RequestParam String podUrl) {
+        String url = podUrl + "/click";
         try {
             String response = restTemplate.getForObject(url, String.class);
             return "Other pod response: " + response;
