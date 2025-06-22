@@ -17,3 +17,7 @@ build/
 
 # Others
 out/
+
+
+#vscode
+.vscode/
