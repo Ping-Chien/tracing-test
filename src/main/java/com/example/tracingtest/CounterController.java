@@ -1,14 +1,15 @@
 package com.example.tracingtest;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.Map;
 
 
 @RestController
@@ -18,9 +19,6 @@ public class CounterController {
 
     @Autowired
     private RestTemplate restTemplate;
-
-    @Value("${other.pod.url}")
-    private String otherPodUrl;
 
     private static final String EXCHANGE_RATE_API_URL = "https://tw.rter.info/capi.php";
     
@@ -67,8 +65,8 @@ public class CounterController {
     }
 
     @GetMapping("/call-other")
-    public String callOtherPodClick() {
-        String url = otherPodUrl + "/click";
+    public String callOtherPodClick(@RequestParam String podUrl) {
+        String url = podUrl + "/click";
         try {
             String response = restTemplate.getForObject(url, String.class);
             return "Other pod response: " + response;
