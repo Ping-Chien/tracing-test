@@ -1,5 +1,7 @@
 package com.example.tracingtest;
 
+import java.util.Random;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,11 +18,8 @@ public class CounterController {
 
     @GetMapping("/click")
     public String click() {
-        long maxId = counterRepository.findMaxId();
-        long newId = maxId + 1;
         Counter counter = new Counter();
-        counter.setId(newId);
-        counter.setNumber(newId);
+        counter.setNumber(new Random().nextLong());
         counterRepository.save(counter);
         return "Clicked!";
     }
