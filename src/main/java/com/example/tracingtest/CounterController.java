@@ -2,6 +2,8 @@ package com.example.tracingtest;
 
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 
 
 @RestController
@@ -21,9 +24,12 @@ public class CounterController {
     private RestTemplate restTemplate;
 
     private static final String EXCHANGE_RATE_API_URL = "https://tw.rter.info/capi.php";
+
+    private static final Logger log = LoggerFactory.getLogger(CounterController.class);
     
     @GetMapping("/click")
     public String click() {
+        log.info("===== Click endpoint called =====");
         try {
             // Fetch exchange rate data from the API as a string
             ResponseEntity<String> response = restTemplate.getForEntity(EXCHANGE_RATE_API_URL, String.class);
@@ -57,20 +63,24 @@ public class CounterController {
             // No need to set ID as it's now auto-incrementing
             counter.setNumber(Math.round(twdToUsd * 1000000)); // Store as long with 6 decimal precision
             counter = counterRepository.save(counter);
-            
+            log.info("Exchange rate saved! 1 TWD = {} USD (ID: {})", twdToUsd, counter.getId());
             return String.format("Exchange rate saved! 1 TWD = %.6f USD (ID: %d)", twdToUsd, counter.getId());  
         } catch (Exception e) {
+            log.error("Failed to fetch exchange rate: {}", e.getMessage());
             return "Error fetching exchange rate: " + e.getMessage();
         }
     }
 
     @GetMapping("/call-other")
     public String callOtherPodClick(@RequestParam String podUrl) {
+        log.info("===== Call other pod endpoint called =====");
         String url = podUrl + "/click";
         try {
             String response = restTemplate.getForObject(url, String.class);
+            log.info("Other pod response: {}", response);
             return "Other pod response: " + response;
         } catch (Exception e) {
+            log.error("Failed to call other pod: {}", e.getMessage());
             return "Failed to call other pod: " + e.getMessage();
         }
     }
