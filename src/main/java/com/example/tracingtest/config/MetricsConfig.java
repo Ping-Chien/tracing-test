@@ -10,6 +10,8 @@ import org.springframework.context.annotation.Configuration;
 import io.micrometer.core.instrument.Clock;
 import io.micrometer.core.instrument.Meter;
 import io.micrometer.core.instrument.Tag;
+import io.micrometer.core.instrument.config.MeterFilter;
+import io.micrometer.core.instrument.distribution.DistributionStatisticConfig;
 import io.micrometer.registry.otlp.OtlpConfig;
 import io.micrometer.registry.otlp.OtlpMeterRegistry;
 @Configuration
@@ -105,6 +107,25 @@ public class MetricsConfig {
                 log.info("===== 指標發送完成 =====");
             }
         };
+
+        
+        // 启用Timer直方图
+        registry.config().meterFilter(
+            new MeterFilter() {
+                @Override
+                public DistributionStatisticConfig configure(Meter.Id id, DistributionStatisticConfig config) {
+                    if (id.getType() == Meter.Type.TIMER) {
+                        // 启用百分位直方图并设置关键百分位值
+                        return DistributionStatisticConfig.builder()
+                            .percentilesHistogram(true)
+                            .percentiles(0.5, 0.95, 0.99)
+                            .build()
+                            .merge(config);
+                    }
+                    return config;
+                }
+            }
+        );
      
         log.info("OtlpMeterRegistry created successfully!");
         return registry;
