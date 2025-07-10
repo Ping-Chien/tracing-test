@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # 參數：可自訂 app image tag，預設為 tracing-test:push-mode
-APP_TAG=${1:-tracing-test:push-mode}
+APP_TAG=${1:-tracing-test:push-mode-bridge-javaagent}
 
 # 編譯 Spring Boot 專案
 ./gradlew clean build -x test

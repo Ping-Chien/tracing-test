@@ -10,7 +10,12 @@
             "env": {
                 "SPRING_PROFILES_ACTIVE": "local"
             },
-            "args": ""
+            "args": "",
+            "vmArgs": ["-javaagent:/Users/pingchien/Downloads/opentelemetry-javaagent.jar",
+                      "-Dotel.javaagent.debug=true",
+                      "-Dotel.traces.exporter=none",
+                      "-Dotel.logs.exporter=none",
+                     "-Dotel.metrics.exporter=console"]
         },
         {
             "type": "java",

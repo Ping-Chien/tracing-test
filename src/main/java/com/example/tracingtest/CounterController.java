@@ -11,9 +11,15 @@ import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.micrometer.core.instrument.MeterRegistry;
+
 
 @RestController
 public class CounterController {
+
+    @Autowired
+    MeterRegistry meterRegistry;
+
     @Autowired
     private CounterRepository counterRepository;
 
@@ -25,6 +31,8 @@ public class CounterController {
     @GetMapping("/click")
     public String click() {
         try {
+            System.out.println("Registry get name ========"+ meterRegistry.getClass().getName());
+            meterRegistry.counter("demo.custom.counter", "env", "test").increment();
             // Fetch exchange rate data from the API as a string
             ResponseEntity<String> response = restTemplate.getForEntity(EXCHANGE_RATE_API_URL, String.class);
             String jsonResponse = response.getBody();
